@@ -634,7 +634,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {
-                src: "https://images.unsplash.com/photo-1572331165267-854da2b021b1?w=800&q=80",
+                src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80",
                 alt: "Luxury pool area",
                 label: "Sky Pool",
               },
