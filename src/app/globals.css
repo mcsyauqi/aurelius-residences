@@ -62,16 +62,6 @@ h1, h2, h3, h4, h5, h6 {
   background: #D4B87A;
 }
 
-/* Smooth page transitions */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-main {
-  animation: fadeIn 0.6s ease-out;
-}
-
 /* Gold gradient text utility */
 .gold-gradient-text {
   background: linear-gradient(135deg, #C9A96E 0%, #E8D5A3 50%, #C9A96E 100%);
@@ -93,13 +83,13 @@ main {
   background: linear-gradient(90deg, transparent, #C9A96E, transparent);
 }
 
-/* Ken Burns animation */
+/* Ken Burns animation for hero images */
 @keyframes kenBurns {
   0% {
     transform: scale(1) translate(0, 0);
   }
   50% {
-    transform: scale(1.1) translate(-1%, -1%);
+    transform: scale(1.08) translate(-0.5%, -0.5%);
   }
   100% {
     transform: scale(1) translate(0, 0);
@@ -108,6 +98,20 @@ main {
 
 .ken-burns {
   animation: kenBurns 20s ease-in-out infinite;
+}
+
+/* Slow pulse for scroll indicator */
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 2s ease-in-out infinite;
 }
 
 /* Hide scrollbar for horizontal scroll */
