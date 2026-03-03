@@ -259,7 +259,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════════════════
           INTRODUCTION
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative py-20 lg:py-28 bg-[#0A0A0A]">
+      <section className="relative py-20 lg:py-28 bg-[#0A0A0A] overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             {/* Left: Text Content */}
@@ -317,7 +317,7 @@ export default function Home() {
             </div>
 
             {/* Right: Image */}
-            <div className="relative">
+            <div className="relative overflow-hidden">
               <div className="relative aspect-[3/4] overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
@@ -328,19 +328,11 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent" />
               </div>
 
-              {/* Decorative border */}
-              <div className="absolute -bottom-4 -right-4 w-full h-full border border-[#C9A96E]/20 -z-10" />
-
-              {/* Floating badge */}
-              <div className="absolute -bottom-6 -left-6 bg-[#0A0A0A] border border-[#C9A96E]/30 px-6 py-4">
+              {/* Quote badge - contained within the image */}
+              <div className="mt-6 border-l-2 border-[#C9A96E]/40 pl-6 py-2">
                 <p className="font-[family-name:var(--font-cormorant)] text-[#C9A96E] text-sm italic">
-                  &ldquo;Architecture is the learned game,
-                </p>
-                <p className="font-[family-name:var(--font-cormorant)] text-[#C9A96E] text-sm italic">
-                  correct and magnificent, of forms
-                </p>
-                <p className="font-[family-name:var(--font-cormorant)] text-[#C9A96E] text-sm italic">
-                  assembled in the light.&rdquo;
+                  &ldquo;Architecture is the learned game, correct and magnificent,
+                  of forms assembled in the light.&rdquo;
                 </p>
                 <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.2em] uppercase mt-2">
                   Le Corbusier
@@ -369,26 +361,27 @@ export default function Home() {
 
         <div className="relative z-10">
           {/* Section Header */}
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-16">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-8 h-[1px] bg-[#C9A96E]" />
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-16 text-center">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#C9A96E]" />
               <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
                 The Collection
               </span>
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#C9A96E]" />
             </div>
             <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-5xl lg:text-6xl text-[#F5F0E8] leading-[1.1] mb-6">
               Four Distinct
               <br />
               <span className="italic text-[#C9A96E]">Collections</span>
             </h2>
-            <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-sm max-w-lg">
+            <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-sm max-w-lg mx-auto">
               Each residence type represents a different philosophy of luxury
               living, united by an unwavering commitment to excellence.
             </p>
           </div>
 
-          {/* Residence Cards - Grid layout */}
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Residence Cards - 2x2 Grid layout */}
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 gap-8">
             {residences.map((residence) => (
               <div key={residence.name} className="group">
                 <div className="relative overflow-hidden bg-[#111111]">
@@ -481,19 +474,16 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Amenity Cards - alternating grid layout */}
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 pb-20 lg:pb-28 space-y-16">
-          {amenities.map((amenity, index) => (
-            <div
-              key={amenity.title}
-              className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
-                index % 2 === 1 ? "lg:[direction:rtl]" : ""
-              }`}
-            >
-              {/* Number + Content */}
-              <div className={index % 2 === 1 ? "lg:[direction:ltr]" : ""}>
-                {/* Number */}
-                <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E]/20 text-6xl md:text-7xl block mb-4">
+        {/* Amenity Cards - clean grid layout */}
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 pb-20 lg:pb-28">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {amenities.map((amenity, index) => (
+              <div
+                key={amenity.title}
+                className="bg-[#111111] border border-[#1F1F1F] p-8 hover:border-[#C9A96E]/20 transition-colors duration-300"
+              >
+                {/* Number accent */}
+                <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E]/30 text-4xl block mb-4">
                   0{index + 1}
                 </span>
 
@@ -503,20 +493,20 @@ export default function Home() {
                 </span>
 
                 {/* Title */}
-                <h3 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl text-[#F5F0E8] mt-3 mb-6">
+                <h3 className="font-[family-name:var(--font-playfair)] text-2xl text-[#F5F0E8] mt-3 mb-4">
                   {amenity.title}
                 </h3>
 
                 {/* Gold Line */}
-                <div className="w-12 h-[1px] bg-[#C9A96E] mb-6" />
+                <div className="w-10 h-[1px] bg-[#C9A96E] mb-4" />
 
                 {/* Description */}
-                <p className="font-[family-name:var(--font-cormorant)] text-lg text-[#6B6B6B] leading-relaxed mb-8">
+                <p className="font-[family-name:var(--font-cormorant)] text-base text-[#6B6B6B] leading-relaxed mb-6">
                   {amenity.description}
                 </p>
 
-                {/* Features Grid */}
-                <div className="grid grid-cols-2 gap-3">
+                {/* Features List */}
+                <div className="space-y-2">
                   {amenity.features.map((feature) => (
                     <div key={feature} className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-[#C9A96E] rotate-45 flex-shrink-0" />
@@ -527,21 +517,8 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
-              {/* Decorative card placeholder (visual element) */}
-              <div className={`relative ${index % 2 === 1 ? "lg:[direction:ltr]" : ""}`}>
-                <div className="bg-[#111111] border border-[#1F1F1F] p-8 md:p-12 flex flex-col items-center justify-center min-h-[300px]">
-                  <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E]/15 text-8xl md:text-9xl">
-                    0{index + 1}
-                  </span>
-                  <span className="font-[family-name:var(--font-cormorant)] text-[#6B6B6B] text-lg italic mt-4">
-                    {amenity.title}
-                  </span>
-                  <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C9A96E]/30 to-transparent mt-4" />
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -898,13 +875,6 @@ export default function Home() {
               </a>
             </div>
           </div>
-        </div>
-
-        {/* Grand Aurelius text at the very bottom */}
-        <div className="border-t border-[#1F1F1F] overflow-hidden">
-          <p className="font-[family-name:var(--font-playfair)] text-[#1F1F1F] text-[8vw] md:text-[6vw] leading-none text-center py-4 select-none">
-            AURELIUS RESIDENCES
-          </p>
         </div>
 
         {/* Creativism credit */}
