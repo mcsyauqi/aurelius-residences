@@ -1,171 +1,202 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 
 /* ─── Data ─── */
 
 const navLinks = [
-  { label: "Residences", href: "#residences" },
-  { label: "Amenities", href: "#amenities" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Contact", href: "#contact" },
+  { label: 'Residences', href: '#residences' },
+  { label: 'Amenities', href: '#amenities' },
+  { label: 'Gallery', href: '#gallery' },
+  { label: 'Contact', href: '#contact' },
 ];
 
 const residences = [
   {
-    name: "Sovereign Suite",
-    size: "350 sqm",
-    sqm: 350,
-    bedrooms: "4 Bedrooms",
-    bathrooms: "5 Bathrooms",
-    price: "From IDR 45B",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
+    name: 'The Imperial Suite',
+    size: '280 sqm',
+    beds: '4 Bedrooms',
     description:
-      "The crown jewel of Aurelius. Panoramic 270-degree views, private elevator access, and a dedicated butler service.",
+      'The crown jewel of Aurelius. A sprawling penthouse-level residence with panoramic views, private elevator foyer, and bespoke interiors crafted by Italian artisans.',
+    image:
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
   },
   {
-    name: "Ambassador",
-    size: "220 sqm",
-    sqm: 220,
-    bedrooms: "3 Bedrooms",
-    bathrooms: "3 Bathrooms",
-    price: "From IDR 28B",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
+    name: 'The Chancellor',
+    size: '180 sqm',
+    beds: '3 Bedrooms',
     description:
-      "Commanding presence with expansive living areas, a private study, and access to the Ambassador Lounge.",
+      'Commanding presence meets refined elegance. Expansive living spaces flow into a private terrace with unobstructed skyline views across Jakarta.',
+    image:
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80',
   },
   {
-    name: "Diplomat",
-    size: "150 sqm",
-    sqm: 150,
-    bedrooms: "2 Bedrooms",
-    bathrooms: "2 Bathrooms",
-    price: "From IDR 18B",
-    image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80",
+    name: 'The Diplomat',
+    size: '120 sqm',
+    beds: '2 Bedrooms',
     description:
-      "Sophisticated elegance with carefully proportioned spaces, premium finishes, and stunning city views.",
-  },
-  {
-    name: "Attach\u00E9",
-    size: "85 sqm",
-    sqm: 85,
-    bedrooms: "1 Bedroom",
-    bathrooms: "1 Bathroom",
-    price: "From IDR 9.5B",
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
-    description:
-      "A refined pied-\u00E0-terre for the cosmopolitan individual. Smart living distilled to its purest form.",
+      'Sophisticated urban living distilled to its purest form. Every square meter is meticulously designed for comfort, beauty, and intelligent functionality.',
+    image:
+      'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80',
   },
 ];
 
 const amenities = [
   {
-    title: "Infinity Pool",
-    subtitle: "52nd Floor Sky Deck",
-    description:
-      "A 25-meter infinity pool seemingly merging with the Jakarta skyline. Open from dawn to midnight, with private cabanas and a poolside bar.",
-    features: ["25m Infinity Edge", "Heated Year-Round", "Private Cabanas", "Sky Bar"],
+    name: 'Infinity Pool',
+    description: '25-meter rooftop pool merging with the Jakarta skyline.',
+    icon: '\u2248', // ≈ wave-like symbol
   },
   {
-    title: "Private Cinema",
-    subtitle: "Level 3 Entertainment Wing",
-    description:
-      "A 24-seat Dolby Atmos cinema with Italian leather recliners, available for private screenings with gourmet dining.",
-    features: ["Dolby Atmos", "4K Laser", "24 Recliners", "Private Booking"],
+    name: 'Private Cinema',
+    description: 'Dolby Atmos theater with Italian leather recliners.',
+    icon: '\u25B6', // ▶ play symbol
   },
   {
-    title: "Wellness Spa",
-    subtitle: "Level 4 Serenity Wing",
-    description:
-      "A holistic wellness sanctuary featuring a vitality pool, Finnish sauna, steam room, and treatment suites.",
-    features: ["Vitality Pool", "Finnish Sauna", "Treatment Suites", "Yoga Studio"],
+    name: 'Wine Cellar',
+    description: 'Temperature-controlled vault housing 2,000+ rare vintages.',
+    icon: '\u2662', // ♢ diamond
   },
   {
-    title: "Sky Lounge",
-    subtitle: "55th Floor Penthouse Level",
-    description:
-      "An exclusive members-only lounge with a curated wine cellar, private dining rooms, and a cigar terrace.",
-    features: ["Wine Cellar", "Private Dining", "Cigar Terrace", "Panoramic Views"],
+    name: 'Fitness Center',
+    description: 'State-of-the-art equipment with personal training suites.',
+    icon: '\u2606', // ☆ star
   },
   {
-    title: "Concierge",
-    subtitle: "24/7 Personal Service",
-    description:
-      "Your dedicated lifestyle team anticipates every need — from restaurant reservations to private jet charters.",
-    features: ["24/7 Available", "Private Chef", "Travel Desk", "Valet Service"],
+    name: 'Sky Lounge',
+    description: 'Members-only lounge on the 42nd floor with panoramic views.',
+    icon: '\u25C7', // ◇ diamond outline
+  },
+  {
+    name: 'Concierge Service',
+    description: '24/7 dedicated lifestyle management for every resident.',
+    icon: '\u2302', // ⌂ house
   },
 ];
 
-const unitTypes = [
-  "Sovereign Suite \u2014 350 sqm",
-  "Ambassador \u2014 220 sqm",
-  "Diplomat \u2014 150 sqm",
-  "Attach\u00E9 \u2014 85 sqm",
+const galleryImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80',
+    alt: 'Modern luxury house exterior',
+    span: true,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80',
+    alt: 'Luxury kitchen with marble island',
+    span: false,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80',
+    alt: 'City skyline at dusk',
+    span: false,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800&q=80',
+    alt: 'Luxury bathroom with freestanding tub',
+    span: false,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80',
+    alt: 'Elegant bedroom with warm lighting',
+    span: false,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80',
+    alt: 'Modern apartment living room',
+    span: false,
+  },
 ];
 
-/* ─── Page Component ─── */
+const stats = [
+  { value: '42', label: 'Floors' },
+  { value: '168', label: 'Residences' },
+  { value: '5', label: 'Penthouses' },
+  { value: '1', label: 'Vision' },
+];
+
+/* ─── Component ─── */
 
 export default function Home() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setFormSubmitted(true);
   };
 
   return (
-    <main className="bg-[#0A0A0A]">
-      {/* ═══════════════════════════════════════════════════════════════
-          NAVBAR
-      ═══════════════════════════════════════════════════════════════ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-[#C9A96E]/10">
+    <main className="bg-[#0A0A0A] min-h-screen">
+
+      {/* ══════════════════════════════════════════════════════════════════
+          1. FIXED NAVIGATION
+      ══════════════════════════════════════════════════════════════════ */}
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? 'bg-[#0A0A0A]/95 backdrop-blur-md border-b border-[#C9A96E]/10'
+            : 'bg-transparent'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-20 lg:h-24">
             {/* Logo */}
-            <a href="#" className="flex items-center gap-3">
-              <div className="w-8 h-8 border border-[#C9A96E] rotate-45 flex items-center justify-center">
-                <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E] text-sm -rotate-45 font-semibold">
-                  A
-                </span>
-              </div>
-              <span className="font-[family-name:var(--font-playfair)] text-[#F5F0E8] text-lg tracking-[0.2em] uppercase">
-                Aurelius
-              </span>
+            <a
+              href="#"
+              className="font-[family-name:var(--font-playfair)] text-[#F5F0EB] text-xl tracking-[0.3em] uppercase"
+            >
+              AURELIUS
             </a>
 
-            {/* Desktop Links */}
-            <div className="hidden md:flex items-center gap-8">
+            {/* Desktop Nav Links */}
+            <div className="hidden md:flex items-center gap-10">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="font-[family-name:var(--font-inter)] text-[#6B6B6B] hover:text-[#C9A96E] text-xs tracking-[0.15em] uppercase transition-colors duration-300"
+                  className="font-[family-name:var(--font-inter)] text-[#A8A29E] hover:text-[#C9A96E] text-xs tracking-[0.15em] uppercase transition-colors duration-300"
                 >
                   {link.label}
                 </a>
               ))}
             </div>
 
-            {/* Mobile Burger */}
+            {/* Desktop CTA */}
+            <a
+              href="#contact"
+              className="hidden md:inline-block px-6 py-2.5 border border-[#C9A96E] text-[#C9A96E] font-[family-name:var(--font-inter)] text-xs tracking-[0.15em] uppercase hover:bg-[#C9A96E] hover:text-[#0A0A0A] transition-all duration-300"
+            >
+              Schedule Visit
+            </a>
+
+            {/* Mobile Hamburger */}
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden flex flex-col gap-1.5 p-2"
               aria-label="Toggle menu"
             >
               <span
                 className={`block w-6 h-[1px] bg-[#C9A96E] transition-all duration-300 ${
-                  mobileOpen ? "rotate-45 translate-y-[7px]" : ""
+                  mobileMenuOpen ? 'rotate-45 translate-y-[7px]' : ''
                 }`}
               />
               <span
                 className={`block w-6 h-[1px] bg-[#C9A96E] transition-all duration-300 ${
-                  mobileOpen ? "opacity-0" : ""
+                  mobileMenuOpen ? 'opacity-0' : ''
                 }`}
               />
               <span
                 className={`block w-6 h-[1px] bg-[#C9A96E] transition-all duration-300 ${
-                  mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""
+                  mobileMenuOpen ? '-rotate-45 -translate-y-[7px]' : ''
                 }`}
               />
             </button>
@@ -174,97 +205,96 @@ export default function Home() {
       </nav>
 
       {/* Mobile Menu Overlay */}
-      {mobileOpen && (
+      {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-[#0A0A0A]/98 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="font-[family-name:var(--font-playfair)] text-[#F5F0E8] text-2xl tracking-[0.2em] uppercase hover:text-[#C9A96E] transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-[family-name:var(--font-playfair)] text-[#F5F0EB] text-2xl tracking-[0.2em] uppercase hover:text-[#C9A96E] transition-colors"
             >
               {link.label}
             </a>
           ))}
+          <a
+            href="#contact"
+            onClick={() => setMobileMenuOpen(false)}
+            className="mt-4 px-8 py-3 border border-[#C9A96E] text-[#C9A96E] font-[family-name:var(--font-inter)] text-sm tracking-[0.15em] uppercase"
+          >
+            Schedule Visit
+          </a>
         </div>
       )}
 
-      {/* ═══════════════════════════════════════════════════════════════
-          HERO
-      ═══════════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════════════════
+          2. HERO
+      ══════════════════════════════════════════════════════════════════ */}
       <section className="relative h-screen overflow-hidden">
         {/* Background Image */}
-        <div className="absolute inset-0 w-full h-full">
+        <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80"
-            alt="City skyline at night with illuminated skyscrapers"
-            className="w-full h-full object-cover ken-burns"
+            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1800&q=80"
+            alt="Luxury residential exterior at golden hour"
+            className="w-full h-full object-cover"
           />
-          {/* Dark overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/70 via-[#0A0A0A]/40 to-[#0A0A0A]" />
-          {/* Side vignette */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/60 via-transparent to-[#0A0A0A]/60" />
+          {/* Dark gradient overlay - heavier at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/50 via-[#0A0A0A]/30 to-[#0A0A0A]/90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/40 via-transparent to-[#0A0A0A]/40" />
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
-          {/* Small decorative line */}
-          <div className="gold-line mb-8" />
-
-          {/* Subtitle */}
-          <p className="font-[family-name:var(--font-cormorant)] text-[#C9A96E] text-sm md:text-base tracking-[0.4em] uppercase mb-6">
-            Jakarta&apos;s Most Prestigious Address
+        {/* Hero Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+          {/* Main Title */}
+          <h1 className="font-[family-name:var(--font-playfair)] text-[#F5F0EB] text-5xl md:text-7xl lg:text-8xl tracking-[0.3em] uppercase mb-2">
+            AURELIUS
+          </h1>
+          <p className="font-[family-name:var(--font-inter)] text-[#F5F0EB] text-sm md:text-base tracking-[0.5em] uppercase mb-8">
+            RESIDENCES
           </p>
 
-          {/* Main Title */}
-          <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-6xl lg:text-8xl text-[#F5F0E8] leading-[1.1] mb-6 max-w-4xl">
-            Where Legacy
-            <br />
-            <span className="italic">Meets</span>{" "}
-            <span className="gold-gradient-text">Luxury</span>
-          </h1>
+          {/* Gold Line */}
+          <div className="w-20 h-[1px] bg-[#C9A96E] mb-8" />
 
-          {/* Description */}
-          <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-sm md:text-base max-w-lg leading-relaxed mb-12">
-            A limited collection of 120 residences rising 58 stories above
-            Jakarta&apos;s golden triangle, designed for those who define excellence.
+          {/* Tagline */}
+          <p className="font-[family-name:var(--font-playfair)] text-[#C9A96E] text-lg md:text-xl italic mb-12 max-w-lg">
+            Where timeless elegance meets modern grandeur
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <a
-              href="#contact"
-              className="px-8 py-3.5 bg-gradient-to-r from-[#C9A96E] to-[#A68B5B] text-[#0A0A0A] font-[family-name:var(--font-inter)] text-xs tracking-[0.2em] uppercase hover:from-[#D4B87A] hover:to-[#C9A96E] transition-all duration-300"
-            >
-              Request Private Viewing
-            </a>
-            <a
               href="#residences"
-              className="px-8 py-3.5 border border-[#C9A96E]/30 text-[#C9A96E] font-[family-name:var(--font-inter)] text-xs tracking-[0.2em] uppercase hover:bg-[#C9A96E]/10 transition-all duration-300"
+              className="px-8 py-3.5 border border-[#C9A96E] text-[#C9A96E] font-[family-name:var(--font-inter)] text-xs tracking-[0.2em] uppercase hover:bg-[#C9A96E]/10 transition-all duration-300"
             >
               Explore Residences
+            </a>
+            <a
+              href="#contact"
+              className="px-8 py-3.5 bg-[#C9A96E] text-[#0A0A0A] font-[family-name:var(--font-inter)] text-xs tracking-[0.2em] uppercase hover:bg-[#D4B97E] transition-all duration-300"
+            >
+              Book Private Tour
             </a>
           </div>
         </div>
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
-          <span className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.3em] uppercase">
-            Scroll to discover
+          <span className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-[10px] tracking-[0.3em] uppercase">
+            Scroll
           </span>
-          <div className="w-[1px] h-8 bg-gradient-to-b from-[#C9A96E] to-transparent animate-pulse-slow" />
+          <div className="w-[1px] h-8 bg-gradient-to-b from-[#C9A96E] to-transparent" />
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          INTRODUCTION
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative py-20 lg:py-28 bg-[#0A0A0A] overflow-hidden">
+      {/* ══════════════════════════════════════════════════════════════════
+          3. INTRODUCTION
+      ══════════════════════════════════════════════════════════════════ */}
+      <section className="py-24 lg:py-32 bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            {/* Left: Text Content */}
+            {/* Left: Text */}
             <div>
-              {/* Section Label */}
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-8 h-[1px] bg-[#C9A96E]" />
                 <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
@@ -272,96 +302,84 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* Heading */}
-              <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl lg:text-5xl text-[#F5F0E8] leading-[1.2] mb-8">
-                A Sanctuary of{" "}
-                <span className="italic text-[#C9A96E]">Refined</span>
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl lg:text-5xl text-[#F5F0EB] leading-[1.2] mb-8">
+                Where Luxury Finds
                 <br />
-                Living Above the Clouds
+                <span className="italic text-[#C9A96E]">Its Address</span>
               </h2>
 
-              {/* Body Text */}
-              <p className="font-[family-name:var(--font-cormorant)] text-lg md:text-xl text-[#6B6B6B] leading-relaxed mb-6">
+              <p className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-sm md:text-base leading-relaxed mb-6">
                 Aurelius Residences represents the pinnacle of residential
-                architecture in Southeast Asia. Each residence is a masterpiece of
-                space, light, and material — curated for the discerning few who
-                understand that true luxury is not about excess, but about the
-                perfection of every detail.
+                architecture in Southeast Asia. Rising 42 stories above
+                Jakarta&apos;s most coveted address, each residence is a
+                masterpiece of space, light, and material crafted for the
+                discerning few who understand that true luxury is not about
+                excess, but the perfection of every detail.
               </p>
 
-              <p className="font-[family-name:var(--font-inter)] text-sm text-[#6B6B6B] leading-relaxed mb-10">
+              <p className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-sm leading-relaxed mb-10">
                 Conceived by world-renowned architects and interior designers,
-                every surface, every view, and every moment within Aurelius has been
-                orchestrated to elevate the art of living. From the travertine
-                marble lobbies to the floor-to-ceiling panoramas, this is where
-                ambition finds its home.
+                every surface, every view, and every moment within Aurelius has
+                been orchestrated to elevate the art of living.
               </p>
 
-              {/* Stats Row */}
-              <div className="flex gap-12">
-                {[
-                  { value: "58", label: "Stories" },
-                  { value: "120", label: "Residences" },
-                  { value: "4", label: "Collections" },
-                ].map((stat) => (
-                  <div key={stat.label}>
-                    <span className="font-[family-name:var(--font-playfair)] text-3xl text-[#C9A96E]">
-                      {stat.value}
-                    </span>
-                    <p className="font-[family-name:var(--font-inter)] text-[10px] tracking-[0.2em] uppercase text-[#6B6B6B] mt-1">
-                      {stat.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              {/* Gold Accent Line */}
+              <div className="w-16 h-[1px] bg-[#C9A96E]" />
             </div>
 
-            {/* Right: Image */}
-            <div className="relative overflow-hidden">
-              <div className="relative aspect-[3/4] overflow-hidden">
+            {/* Right: Image with gold border frame */}
+            <div className="relative">
+              <div className="relative p-3 border border-[#C9A96E]/20">
                 <img
-                  src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
-                  alt="Luxury modern interior with marble and gold accents"
-                  className="w-full h-full object-cover"
+                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80"
+                  alt="Luxury interior with marble countertops and warm lighting"
+                  className="w-full h-auto aspect-[4/5] object-cover"
                 />
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent" />
               </div>
-
-              {/* Quote badge - contained within the image */}
-              <div className="mt-6 border-l-2 border-[#C9A96E]/40 pl-6 py-2">
-                <p className="font-[family-name:var(--font-cormorant)] text-[#C9A96E] text-sm italic">
-                  &ldquo;Architecture is the learned game, correct and magnificent,
-                  of forms assembled in the light.&rdquo;
-                </p>
-                <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.2em] uppercase mt-2">
-                  Le Corbusier
-                </p>
-              </div>
+              {/* Offset gold corner accents */}
+              <div className="absolute -top-2 -left-2 w-8 h-8 border-t border-l border-[#C9A96E]" />
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b border-r border-[#C9A96E]" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          RESIDENCES
-      ═══════════════════════════════════════════════════════════════ */}
-      <section id="residences" className="relative py-20 lg:py-28 bg-[#0A0A0A] overflow-hidden">
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div
-            className="w-full h-full"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(45deg, #C9A96E 0, #C9A96E 1px, transparent 0, transparent 50%)",
-              backgroundSize: "40px 40px",
-            }}
-          />
+      {/* ══════════════════════════════════════════════════════════════════
+          4. KEY NUMBERS
+      ══════════════════════════════════════════════════════════════════ */}
+      <section className="py-24 lg:py-32 bg-[#111111]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
+            {stats.map((stat, index) => (
+              <div
+                key={stat.label}
+                className={`text-center py-8 md:py-0 ${
+                  index < stats.length - 1
+                    ? 'md:border-r md:border-[#C9A96E]/20'
+                    : ''
+                } ${
+                  index < 2 ? 'border-b md:border-b-0 border-[#C9A96E]/20' : ''
+                }`}
+              >
+                <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E] text-4xl md:text-5xl lg:text-6xl block mb-2">
+                  {stat.value}
+                </span>
+                <span className="font-[family-name:var(--font-inter)] text-[#F5F0EB] text-xs tracking-[0.2em] uppercase">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <div className="relative z-10">
+      {/* ══════════════════════════════════════════════════════════════════
+          5. RESIDENCES
+      ══════════════════════════════════════════════════════════════════ */}
+      <section id="residences" className="py-24 lg:py-32 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
           {/* Section Header */}
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-16 text-center">
+          <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#C9A96E]" />
               <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
@@ -369,78 +387,46 @@ export default function Home() {
               </span>
               <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#C9A96E]" />
             </div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-5xl lg:text-6xl text-[#F5F0E8] leading-[1.1] mb-6">
-              Four Distinct
-              <br />
-              <span className="italic text-[#C9A96E]">Collections</span>
+            <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl lg:text-5xl text-[#F5F0EB] leading-[1.2]">
+              Exceptional <span className="italic text-[#C9A96E]">Residences</span>
             </h2>
-            <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-sm max-w-lg mx-auto">
-              Each residence type represents a different philosophy of luxury
-              living, united by an unwavering commitment to excellence.
-            </p>
           </div>
 
-          {/* Residence Cards - 2x2 Grid layout */}
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {residences.map((residence) => (
-              <div key={residence.name} className="group">
-                <div className="relative overflow-hidden bg-[#111111]">
-                  {/* Image */}
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <img
-                      src={residence.image}
-                      alt={residence.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/20 to-transparent" />
+              <div
+                key={residence.name}
+                className="group border border-[#1A1A1A] hover:border-[#C9A96E]/30 transition-colors duration-500"
+              >
+                {/* Image */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={residence.image}
+                    alt={residence.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent" />
+                </div>
 
-                    {/* Unit size badge */}
-                    <div className="absolute top-6 right-6 bg-[#0A0A0A]/80 backdrop-blur-sm border border-[#C9A96E]/30 px-4 py-2">
-                      <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-xs tracking-[0.1em]">
-                        {residence.size}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content overlay at bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="font-[family-name:var(--font-playfair)] text-xl md:text-2xl text-[#F5F0E8] mb-2">
-                      {residence.name}
-                    </h3>
-
-                    <p className="font-[family-name:var(--font-cormorant)] text-[#6B6B6B] text-sm leading-relaxed mb-3 line-clamp-2">
-                      {residence.description}
-                    </p>
-
-                    {/* Details */}
-                    <div className="flex items-center gap-3 mb-3 flex-wrap">
-                      <span className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px]">
-                        {residence.bedrooms}
-                      </span>
-                      <span className="w-[1px] h-3 bg-[#C9A96E]/30" />
-                      <span className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px]">
-                        {residence.bathrooms}
-                      </span>
-                      <span className="w-[1px] h-3 bg-[#C9A96E]/30" />
-                      <span className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px]">
-                        {residence.sqm} m&sup2;
-                      </span>
-                    </div>
-
-                    {/* Price & CTA */}
-                    <div className="flex items-center justify-between">
-                      <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E] text-base">
-                        {residence.price}
-                      </span>
-                      <a
-                        href="#contact"
-                        className="font-[family-name:var(--font-inter)] text-[#F5F0E8] text-[10px] tracking-[0.2em] uppercase border-b border-[#C9A96E]/30 pb-0.5 hover:border-[#C9A96E] transition-colors"
-                      >
-                        Inquire
-                      </a>
-                    </div>
-                  </div>
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="font-[family-name:var(--font-playfair)] text-xl text-[#F5F0EB] mb-2">
+                    {residence.name}
+                  </h3>
+                  <p className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-xs tracking-[0.1em] mb-4">
+                    {residence.size} &middot; {residence.beds}
+                  </p>
+                  <p className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-sm leading-relaxed mb-6">
+                    {residence.description}
+                  </p>
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center gap-2 font-[family-name:var(--font-inter)] text-[#C9A96E] text-xs tracking-[0.15em] uppercase hover:gap-3 transition-all duration-300"
+                  >
+                    View Details
+                    <span className="text-sm">&rarr;</span>
+                  </a>
                 </div>
               </div>
             ))}
@@ -448,194 +434,89 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          AMENITIES
-      ═══════════════════════════════════════════════════════════════ */}
-      <section id="amenities" className="bg-[#0A0A0A]">
-        {/* Section Header */}
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-20 lg:py-28">
-          <div className="text-center">
+      {/* ══════════════════════════════════════════════════════════════════
+          6. AMENITIES
+      ══════════════════════════════════════════════════════════════════ */}
+      <section id="amenities" className="py-24 lg:py-32 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          {/* Section Header */}
+          <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#C9A96E]" />
               <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
-                World-Class Amenities
+                World-Class Living
               </span>
               <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#C9A96E]" />
             </div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-5xl lg:text-6xl text-[#F5F0E8] leading-[1.1] mb-6">
-              Curated for the
-              <br />
-              <span className="italic text-[#C9A96E]">Extraordinary</span>
+            <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl lg:text-5xl text-[#F5F0EB] leading-[1.2]">
+              Curated <span className="italic text-[#C9A96E]">Amenities</span>
             </h2>
-            <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-sm max-w-lg mx-auto">
-              Every amenity at Aurelius has been designed not merely to impress,
-              but to transform your daily rituals into moments of pure indulgence.
-            </p>
           </div>
-        </div>
 
-        {/* Amenity Cards - clean grid layout */}
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 pb-20 lg:pb-28">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {amenities.map((amenity, index) => (
+          {/* 2x3 Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {amenities.map((amenity) => (
               <div
-                key={amenity.title}
-                className="bg-[#111111] border border-[#1F1F1F] p-8 hover:border-[#C9A96E]/20 transition-colors duration-300"
+                key={amenity.name}
+                className="bg-[#111111] border border-[#1A1A1A] p-8 hover:border-[#C9A96E]/30 transition-colors duration-500"
               >
-                {/* Number accent */}
-                <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E]/30 text-4xl block mb-4">
-                  0{index + 1}
-                </span>
+                {/* Icon */}
+                <div className="w-12 h-12 border border-[#C9A96E]/40 flex items-center justify-center mb-6">
+                  <span className="text-[#C9A96E] text-xl">{amenity.icon}</span>
+                </div>
 
-                {/* Subtitle */}
-                <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
-                  {amenity.subtitle}
-                </span>
-
-                {/* Title */}
-                <h3 className="font-[family-name:var(--font-playfair)] text-2xl text-[#F5F0E8] mt-3 mb-4">
-                  {amenity.title}
+                {/* Name */}
+                <h3 className="font-[family-name:var(--font-playfair)] text-lg text-[#F5F0EB] mb-3">
+                  {amenity.name}
                 </h3>
 
-                {/* Gold Line */}
-                <div className="w-10 h-[1px] bg-[#C9A96E] mb-4" />
-
                 {/* Description */}
-                <p className="font-[family-name:var(--font-cormorant)] text-base text-[#6B6B6B] leading-relaxed mb-6">
+                <p className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-sm leading-relaxed">
                   {amenity.description}
                 </p>
-
-                {/* Features List */}
-                <div className="space-y-2">
-                  {amenity.features.map((feature) => (
-                    <div key={feature} className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 bg-[#C9A96E] rotate-45 flex-shrink-0" />
-                      <span className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-xs">
-                        {feature}
-                      </span>
-                    </div>
-                  ))}
-                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          GALLERY / QUOTE SECTION
-      ═══════════════════════════════════════════════════════════════ */}
-      <section id="gallery" className="relative min-h-screen bg-[#0A0A0A] overflow-hidden">
-        {/* Full Width Image */}
-        <div className="relative h-screen overflow-hidden">
-          <div className="absolute inset-0">
-            <img
-              src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80"
-              alt="Modern glass tower architecture"
-              className="w-full h-full object-cover ken-burns"
-            />
-            {/* Heavy dark overlay for text readability */}
-            <div className="absolute inset-0 bg-[#0A0A0A]/60" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-[#0A0A0A]/40" />
-          </div>
-
-          {/* Centered Quote Content */}
-          <div className="absolute inset-0 flex items-center justify-center z-10">
-            <div className="text-center px-6 max-w-4xl">
-              {/* Section Label */}
-              <div className="flex items-center justify-center gap-4 mb-10">
-                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#C9A96E]" />
-                <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
-                  Design Philosophy
-                </span>
-                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#C9A96E]" />
-              </div>
-
-              {/* Large opening quote mark */}
-              <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E]/30 text-8xl md:text-9xl leading-none block mb-[-20px]">
-                &ldquo;
-              </span>
-
-              {/* Quote */}
-              <blockquote className="font-[family-name:var(--font-cormorant)] text-2xl md:text-4xl lg:text-5xl text-[#F5F0E8] leading-[1.3] italic mb-8">
-                We did not design a building.
-                <br />
-                We sculpted a monument to the
-                <br />
-                <span className="text-[#C9A96E]">art of living well.</span>
-              </blockquote>
-
-              {/* Gold line */}
-              <div className="w-16 h-[1px] bg-[#C9A96E] mx-auto mb-6" />
-
-              {/* Attribution */}
-              <p className="font-[family-name:var(--font-inter)] text-[#F5F0E8] text-sm tracking-[0.1em]">
-                Marcus Hartono
-              </p>
-              <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.2em] uppercase mt-1">
-                Principal Architect, Hartono &amp; Associates
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Architecture Details Bar */}
-        <div className="bg-[#111111] border-t border-b border-[#1F1F1F]">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-[#1F1F1F]">
-              {[
-                { label: "Facade Material", value: "Low-E Glass & Titanium" },
-                { label: "Structural System", value: "Reinforced Core Wall" },
-                { label: "Seismic Rating", value: "Zone IV Compliant" },
-                { label: "Sustainability", value: "LEED Gold Certified" },
-              ].map((item) => (
-                <div key={item.label} className="py-8 px-6">
-                  <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.2em] uppercase mb-2">
-                    {item.label}
-                  </p>
-                  <p className="font-[family-name:var(--font-cormorant)] text-[#F5F0E8] text-lg">
-                    {item.value}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          IMAGE GALLERY ROW
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-20 lg:py-28 bg-[#0A0A0A]">
+      {/* ══════════════════════════════════════════════════════════════════
+          7. GALLERY
+      ══════════════════════════════════════════════════════════════════ */}
+      <section id="gallery" className="py-24 lg:py-32 bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              {
-                src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80",
-                alt: "Luxury pool area",
-                label: "Sky Pool",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
-                alt: "Grand lobby interior",
-                label: "Grand Lobby",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80",
-                alt: "Luxury bedroom suite",
-                label: "Master Suite",
-              },
-            ].map((img) => (
-              <div key={img.label} className="group relative aspect-[4/3] overflow-hidden">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#C9A96E]" />
+              <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
+                Visual Journey
+              </span>
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#C9A96E]" />
+            </div>
+            <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl lg:text-5xl text-[#F5F0EB] leading-[1.2]">
+              Gallery
+            </h2>
+          </div>
+
+          {/* Masonry-like Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {galleryImages.map((img, index) => (
+              <div
+                key={index}
+                className={`group relative overflow-hidden cursor-pointer ${
+                  img.span ? 'sm:col-span-2 aspect-[16/9]' : 'aspect-square'
+                }`}
+              >
                 <img
                   src={img.src}
                   alt={img.alt}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/80 to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
-                    {img.label}
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-[#0A0A0A]/0 group-hover:bg-[#0A0A0A]/60 transition-all duration-500 flex items-center justify-center">
+                  <span className="font-[family-name:var(--font-inter)] text-[#F5F0EB] text-xs tracking-[0.2em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    View
                   </span>
                 </div>
               </div>
@@ -644,158 +525,164 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          CONTACT / REGISTRATION
-      ═══════════════════════════════════════════════════════════════ */}
-      <section id="contact" className="relative py-20 lg:py-28 bg-[#0A0A0A] overflow-hidden">
-        {/* Decorative gold corner accents */}
-        <div className="absolute top-0 left-0 w-32 h-32 border-l border-t border-[#C9A96E]/10" />
-        <div className="absolute bottom-0 right-0 w-32 h-32 border-r border-b border-[#C9A96E]/10" />
-
+      {/* ══════════════════════════════════════════════════════════════════
+          8. CONTACT CTA
+      ══════════════════════════════════════════════════════════════════ */}
+      <section id="contact" className="py-24 lg:py-32 bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#C9A96E]" />
+              <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
+                Get in Touch
+              </span>
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#C9A96E]" />
+            </div>
+            <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl lg:text-5xl text-[#F5F0EB] leading-[1.2] mb-4">
+              Experience <span className="italic text-[#C9A96E]">Aurelius</span>
+            </h2>
+            <p className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-sm max-w-lg mx-auto">
+              Schedule a private tour and discover why Aurelius is Jakarta&apos;s
+              most sought-after address.
+            </p>
+          </div>
+
+          {/* Two Columns: Info + Form */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-            {/* Left: Text Content */}
+            {/* Left: Contact Info */}
             <div className="flex flex-col justify-center">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#C9A96E]" />
-                <span className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase">
-                  Private Registration
-                </span>
-              </div>
+              <div className="space-y-8">
+                {/* Address */}
+                <div>
+                  <h3 className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase mb-3">
+                    Sales Gallery
+                  </h3>
+                  <p className="font-[family-name:var(--font-inter)] text-[#F5F0EB] text-sm leading-relaxed">
+                    Jl. Jend. Sudirman Kav. 52-53
+                    <br />
+                    SCBD, South Jakarta 12190
+                    <br />
+                    Indonesia
+                  </p>
+                </div>
 
-              <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-5xl text-[#F5F0E8] leading-[1.1] mb-6">
-                Begin Your
-                <br />
-                <span className="italic text-[#C9A96E]">Aurelius</span> Journey
-              </h2>
+                {/* Phone */}
+                <div>
+                  <h3 className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase mb-3">
+                    Phone
+                  </h3>
+                  <p className="font-[family-name:var(--font-inter)] text-[#F5F0EB] text-sm">
+                    +62 21 5790 8888
+                  </p>
+                </div>
 
-              <p className="font-[family-name:var(--font-cormorant)] text-lg text-[#6B6B6B] leading-relaxed mb-8 max-w-md">
-                Register your interest for priority access to floor plans,
-                pricing, and exclusive private viewings. Our dedicated sales
-                team will contact you within 24 hours.
-              </p>
+                {/* Email */}
+                <div>
+                  <h3 className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase mb-3">
+                    Email
+                  </h3>
+                  <p className="font-[family-name:var(--font-inter)] text-[#F5F0EB] text-sm">
+                    private@aurelius-residences.com
+                  </p>
+                </div>
 
-              {/* Trust indicators */}
-              <div className="space-y-4">
-                {[
-                  "Priority access to unreleased floor plans",
-                  "Exclusive invitation to private showcase events",
-                  "Direct line to your personal sales consultant",
-                  "Early-bird pricing for founding residents",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 bg-[#C9A96E] rotate-45 mt-1.5 flex-shrink-0" />
-                    <span className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-sm">
-                      {item}
-                    </span>
-                  </div>
-                ))}
+                {/* Hours */}
+                <div>
+                  <h3 className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase mb-3">
+                    Viewing Hours
+                  </h3>
+                  <p className="font-[family-name:var(--font-inter)] text-[#F5F0EB] text-sm">
+                    By Appointment Only
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Right: Form */}
             <div>
-              {!submitted ? (
+              {!formSubmitted ? (
                 <form
-                  onSubmit={handleSubmit}
-                  className="bg-[#111111] border border-[#1F1F1F] p-8 md:p-10"
+                  onSubmit={handleFormSubmit}
+                  className="bg-[#111111] border border-[#1A1A1A] p-8 md:p-10"
                 >
-                  <h3 className="font-[family-name:var(--font-playfair)] text-xl text-[#F5F0E8] mb-8">
-                    Request Private Viewing
-                  </h3>
-
                   {/* Name */}
                   <div className="mb-6">
-                    <label className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.2em] uppercase block mb-2">
+                    <label className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-[10px] tracking-[0.2em] uppercase block mb-2">
                       Full Name
                     </label>
                     <input
                       type="text"
                       required
                       placeholder="Enter your full name"
-                      className="w-full bg-transparent border-b border-[#1F1F1F] focus:border-[#C9A96E] text-[#F5F0E8] font-[family-name:var(--font-inter)] text-sm py-3 outline-none transition-colors placeholder:text-[#6B6B6B]/50"
+                      className="w-full bg-transparent border-b border-[#1A1A1A] focus:border-[#C9A96E] text-[#F5F0EB] font-[family-name:var(--font-inter)] text-sm py-3 outline-none transition-colors placeholder:text-[#A8A29E]/40"
                     />
                   </div>
 
                   {/* Email */}
                   <div className="mb-6">
-                    <label className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.2em] uppercase block mb-2">
+                    <label className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-[10px] tracking-[0.2em] uppercase block mb-2">
                       Email Address
                     </label>
                     <input
                       type="email"
                       required
                       placeholder="your@email.com"
-                      className="w-full bg-transparent border-b border-[#1F1F1F] focus:border-[#C9A96E] text-[#F5F0E8] font-[family-name:var(--font-inter)] text-sm py-3 outline-none transition-colors placeholder:text-[#6B6B6B]/50"
+                      className="w-full bg-transparent border-b border-[#1A1A1A] focus:border-[#C9A96E] text-[#F5F0EB] font-[family-name:var(--font-inter)] text-sm py-3 outline-none transition-colors placeholder:text-[#A8A29E]/40"
                     />
                   </div>
 
                   {/* Phone */}
                   <div className="mb-6">
-                    <label className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.2em] uppercase block mb-2">
+                    <label className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-[10px] tracking-[0.2em] uppercase block mb-2">
                       Phone Number
                     </label>
                     <input
                       type="tel"
                       required
                       placeholder="+62 812 3456 7890"
-                      className="w-full bg-transparent border-b border-[#1F1F1F] focus:border-[#C9A96E] text-[#F5F0E8] font-[family-name:var(--font-inter)] text-sm py-3 outline-none transition-colors placeholder:text-[#6B6B6B]/50"
+                      className="w-full bg-transparent border-b border-[#1A1A1A] focus:border-[#C9A96E] text-[#F5F0EB] font-[family-name:var(--font-inter)] text-sm py-3 outline-none transition-colors placeholder:text-[#A8A29E]/40"
                     />
                   </div>
 
-                  {/* Unit Type */}
+                  {/* Message */}
                   <div className="mb-10">
-                    <label className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-[10px] tracking-[0.2em] uppercase block mb-2">
-                      Preferred Residence
+                    <label className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-[10px] tracking-[0.2em] uppercase block mb-2">
+                      Message
                     </label>
-                    <select
-                      required
-                      defaultValue=""
-                      className="w-full bg-transparent border-b border-[#1F1F1F] focus:border-[#C9A96E] text-[#F5F0E8] font-[family-name:var(--font-inter)] text-sm py-3 outline-none transition-colors appearance-none cursor-pointer"
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23C9A96E'/%3E%3C/svg%3E")`,
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "right 0 center",
-                      }}
-                    >
-                      <option value="" disabled className="bg-[#111111] text-[#6B6B6B]">
-                        Select your preferred residence
-                      </option>
-                      {unitTypes.map((unit) => (
-                        <option key={unit} value={unit} className="bg-[#111111]">
-                          {unit}
-                        </option>
-                      ))}
-                    </select>
+                    <textarea
+                      rows={3}
+                      placeholder="Tell us about your ideal residence..."
+                      className="w-full bg-transparent border-b border-[#1A1A1A] focus:border-[#C9A96E] text-[#F5F0EB] font-[family-name:var(--font-inter)] text-sm py-3 outline-none transition-colors resize-none placeholder:text-[#A8A29E]/40"
+                    />
                   </div>
 
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full py-4 bg-gradient-to-r from-[#C9A96E] to-[#A68B5B] text-[#0A0A0A] font-[family-name:var(--font-inter)] text-xs tracking-[0.2em] uppercase hover:from-[#D4B87A] hover:to-[#C9A96E] transition-all duration-300 hover:shadow-[0_0_30px_rgba(201,169,110,0.3)]"
+                    className="w-full py-4 bg-[#C9A96E] text-[#0A0A0A] font-[family-name:var(--font-inter)] text-xs tracking-[0.2em] uppercase hover:bg-[#D4B97E] transition-all duration-300 hover:shadow-[0_0_30px_rgba(201,169,110,0.3)]"
                   >
-                    Request Private Viewing
+                    Send Inquiry
                   </button>
 
-                  <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B]/50 text-[10px] mt-4 text-center">
-                    By submitting, you agree to our privacy policy.
-                    Your information will never be shared.
+                  <p className="font-[family-name:var(--font-inter)] text-[#A8A29E]/40 text-[10px] mt-4 text-center">
+                    We respect your privacy. Your information will never be
+                    shared.
                   </p>
                 </form>
               ) : (
-                <div className="bg-[#111111] border border-[#C9A96E]/30 p-8 md:p-10 flex flex-col items-center justify-center min-h-[500px] text-center">
+                <div className="bg-[#111111] border border-[#C9A96E]/30 p-8 md:p-10 flex flex-col items-center justify-center min-h-[460px] text-center">
                   <div className="w-12 h-12 border border-[#C9A96E] rotate-45 flex items-center justify-center mb-8">
                     <span className="text-[#C9A96E] -rotate-45 text-lg">
                       &#10003;
                     </span>
                   </div>
-                  <h3 className="font-[family-name:var(--font-playfair)] text-2xl text-[#F5F0E8] mb-4">
+                  <h3 className="font-[family-name:var(--font-playfair)] text-2xl text-[#F5F0EB] mb-4">
                     Thank You
                   </h3>
-                  <p className="font-[family-name:var(--font-cormorant)] text-lg text-[#6B6B6B] max-w-sm">
-                    Your request has been received. A member of our exclusive
-                    sales team will contact you within 24 hours to arrange your
-                    private viewing.
+                  <p className="font-[family-name:var(--font-inter)] text-[#A8A29E] text-sm max-w-sm leading-relaxed">
+                    Your inquiry has been received. Our team will contact you
+                    within 24 hours to arrange your private viewing.
                   </p>
                   <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C9A96E] to-transparent mt-8" />
                 </div>
@@ -805,91 +692,89 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          FOOTER
-      ═══════════════════════════════════════════════════════════════ */}
-      <footer className="bg-[#0A0A0A] border-t border-[#1F1F1F]">
+      {/* ══════════════════════════════════════════════════════════════════
+          9. FOOTER
+      ══════════════════════════════════════════════════════════════════ */}
+      <footer className="bg-[#050505] border-t border-[#1A1A1A]">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            {/* Logo & Address */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {/* Column 1: Brand */}
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 border border-[#C9A96E] rotate-45 flex items-center justify-center">
-                  <span className="font-[family-name:var(--font-playfair)] text-[#C9A96E] text-sm -rotate-45 font-semibold">
-                    A
-                  </span>
-                </div>
-                <span className="font-[family-name:var(--font-playfair)] text-[#F5F0E8] text-lg tracking-[0.2em] uppercase">
-                  Aurelius
-                </span>
+              <h3 className="font-[family-name:var(--font-playfair)] text-[#F5F0EB] text-lg tracking-[0.2em] uppercase mb-4">
+                Aurelius
+              </h3>
+              <p className="font-[family-name:var(--font-playfair)] text-[#C9A96E] text-sm italic mb-4">
+                Where timeless elegance meets modern grandeur
+              </p>
+              <p className="font-[family-name:var(--font-inter)] text-[#A8A29E]/60 text-xs leading-relaxed">
+                An ultra-luxury residential tower offering 168 exquisite
+                residences in the heart of Jakarta.
+              </p>
+            </div>
+
+            {/* Column 2: Quick Links */}
+            <div>
+              <h3 className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase mb-6">
+                Quick Links
+              </h3>
+              <div className="space-y-3">
+                {['Residences', 'Amenities', 'Gallery', 'Contact', 'Privacy Policy', 'Terms'].map(
+                  (link) => (
+                    <a
+                      key={link}
+                      href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="block font-[family-name:var(--font-inter)] text-[#A8A29E]/60 text-xs hover:text-[#C9A96E] transition-colors duration-300"
+                    >
+                      {link}
+                    </a>
+                  )
+                )}
               </div>
-              <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-xs leading-relaxed">
-                Jl. Jend. Sudirman Kav. 52-53
-                <br />
-                SCBD, South Jakarta 12190
-                <br />
-                Indonesia
-              </p>
             </div>
 
-            {/* Contact */}
-            <div className="text-left md:text-right">
-              <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-xs mb-1">
-                <span className="text-[#C9A96E]">T</span> &nbsp;+62 21 5790 8888
-              </p>
-              <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-xs mb-1">
-                <span className="text-[#C9A96E]">E</span>{" "}
-                &nbsp;private@aurelius-residences.com
-              </p>
-              <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B] text-xs">
-                <span className="text-[#C9A96E]">W</span>{" "}
-                &nbsp;aurelius-residences.com
-              </p>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="mt-12 pt-8 border-t border-[#1F1F1F] flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="font-[family-name:var(--font-inter)] text-[#6B6B6B]/50 text-[10px] tracking-[0.1em]">
-              &copy; 2026 Aurelius Residences. All rights reserved.
-            </p>
-
-            <div className="flex items-center gap-6">
-              <a
-                href="#"
-                className="font-[family-name:var(--font-inter)] text-[#6B6B6B]/50 text-[10px] tracking-[0.1em] uppercase hover:text-[#C9A96E] transition-colors"
-              >
-                Privacy
-              </a>
-              <a
-                href="#"
-                className="font-[family-name:var(--font-inter)] text-[#6B6B6B]/50 text-[10px] tracking-[0.1em] uppercase hover:text-[#C9A96E] transition-colors"
-              >
-                Terms
-              </a>
-              <a
-                href="#"
-                className="font-[family-name:var(--font-inter)] text-[#6B6B6B]/50 text-[10px] tracking-[0.1em] uppercase hover:text-[#C9A96E] transition-colors"
-              >
-                Sitemap
-              </a>
+            {/* Column 3: Contact */}
+            <div>
+              <h3 className="font-[family-name:var(--font-inter)] text-[#C9A96E] text-[10px] tracking-[0.3em] uppercase mb-6">
+                Contact
+              </h3>
+              <div className="space-y-3">
+                <p className="font-[family-name:var(--font-inter)] text-[#A8A29E]/60 text-xs">
+                  Jl. Jend. Sudirman Kav. 52-53
+                </p>
+                <p className="font-[family-name:var(--font-inter)] text-[#A8A29E]/60 text-xs">
+                  SCBD, South Jakarta 12190
+                </p>
+                <p className="font-[family-name:var(--font-inter)] text-[#A8A29E]/60 text-xs">
+                  +62 21 5790 8888
+                </p>
+                <p className="font-[family-name:var(--font-inter)] text-[#A8A29E]/60 text-xs">
+                  private@aurelius-residences.com
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Creativism credit */}
-        <div className="border-t border-[#1F1F1F] py-4">
-          <p className="text-center font-[family-name:var(--font-inter)] text-[#6B6B6B]/40 text-[10px] tracking-[0.1em]">
-            Made with &#9829; by{" "}
-            <a
-              href="https://creativism.id"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#C9A96E]/50 hover:text-[#C9A96E] transition-colors"
-            >
-              Creativism
-            </a>
-          </p>
+        {/* Bottom Bar */}
+        <div className="border-t border-[#1A1A1A]">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <p className="font-[family-name:var(--font-inter)] text-[#A8A29E]/40 text-[10px] tracking-[0.1em]">
+                &copy; 2026 Aurelius Residences. All rights reserved.
+              </p>
+              <p className="font-[family-name:var(--font-inter)] text-[#A8A29E]/40 text-[10px] tracking-[0.1em]">
+                Made with &#9829; by{' '}
+                <a
+                  href="https://creativism.id"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#C9A96E]/50 hover:text-[#C9A96E] transition-colors"
+                >
+                  Creativism
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
       </footer>
     </main>

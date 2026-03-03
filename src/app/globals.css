@@ -1,52 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #0A0A0A;
-  --color-foreground: #F5F0E8;
   --color-gold: #C9A96E;
-  --color-gold-light: #D4B87A;
-  --color-gold-dark: #A68B5B;
-  --color-navy: #1A1A2E;
-  --color-ivory: #F5F0E8;
-  --color-muted: #6B6B6B;
+  --color-gold-light: #D4B97E;
+  --color-gold-dark: #B8944F;
   --color-dark: #0A0A0A;
-  --color-dark-card: #111111;
-  --color-dark-border: #1F1F1F;
-  --color-dark-hover: #161616;
+  --color-dark-lighter: #111111;
+  --color-dark-card: #141414;
+  --color-dark-border: #1A1A1A;
+  --color-off-white: #F5F0EB;
+  --color-off-white-muted: #A8A29E;
+  --color-footer: #050505;
 
-  --font-playfair: var(--font-playfair);
-  --font-inter: var(--font-inter);
-  --font-cormorant: var(--font-cormorant);
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-inter: 'Inter', system-ui, sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
+/* Base */
 body {
-  background: #0A0A0A;
-  color: #F5F0E8;
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  background-color: #0A0A0A;
+  color: #F5F0EB;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-playfair), 'Playfair Display', serif;
-}
-
+/* Selection */
 ::selection {
-  background: #C9A96E;
+  background-color: #C9A96E;
   color: #0A0A0A;
 }
 
+::-moz-selection {
+  background-color: #C9A96E;
+  color: #0A0A0A;
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -55,71 +50,55 @@ h1, h2, h3, h4, h5, h6 {
 
 ::-webkit-scrollbar-thumb {
   background: #C9A96E;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4B87A;
+  background: #D4B97E;
 }
 
-/* Gold gradient text utility */
-.gold-gradient-text {
-  background: linear-gradient(135deg, #C9A96E 0%, #E8D5A3 50%, #C9A96E 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: #C9A96E #0A0A0A;
 }
 
-/* Gold line separator */
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Utility: gold divider lines */
 .gold-line {
   width: 60px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #C9A96E, transparent);
+  background: #C9A96E;
 }
 
-.gold-line-wide {
-  width: 120px;
+.gold-line-center {
+  width: 80px;
   height: 1px;
   background: linear-gradient(90deg, transparent, #C9A96E, transparent);
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Ken Burns animation for hero images */
-@keyframes kenBurns {
-  0% {
-    transform: scale(1) translate(0, 0);
-  }
-  50% {
-    transform: scale(1.08) translate(-0.5%, -0.5%);
-  }
-  100% {
-    transform: scale(1) translate(0, 0);
-  }
-}
-
-.ken-burns {
-  animation: kenBurns 20s ease-in-out infinite;
-}
-
-/* Slow pulse for scroll indicator */
-@keyframes pulseSlow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-}
-
-.animate-pulse-slow {
-  animation: pulseSlow 2s ease-in-out infinite;
-}
-
-/* Hide scrollbar for horizontal scroll */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* Animation utility */
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
 }
